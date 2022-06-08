@@ -1,0 +1,4 @@
+---
+float_ip: 172.19.160.31
+auth_pass: 12345
+ifname: ens192

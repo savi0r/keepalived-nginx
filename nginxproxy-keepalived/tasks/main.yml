@@ -1,0 +1,54 @@
+--- 
+- name: "apt-get update"
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: "install nginx and keepalived"
+  apt:
+    name: 
+      - keepalived
+      - nginx
+    state: latest
+
+- name: Set ip forwarding on 
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Set ip non local bind
+  sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Generate keepalived configuration file
+  template: 
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify: Restart keepalived
+
+- name: Generate nginx configuration file
+  template: 
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: Restart nginx
+
+- name: Enable and start keepalived service
+  systemd: 
+    name: keepalived
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+- name: Enable and start nginx 
+  systemd: 
+    name: nginx 
+    enabled: yes
+    state: started
+    daemon_reload: yes

@@ -1,0 +1,5 @@
+[hosts]
+master ansible_connection=local id=1 type=master host_weight=255
+slave1  ansible_host=172.19.160.30 id=2 type=slave host_weight=254
+slave2 ansible_host=172.19.160.28 id=3 type=slave host_weight=253
+
